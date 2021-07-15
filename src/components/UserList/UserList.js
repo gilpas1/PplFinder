@@ -1,13 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Text from "components/Text";
 import Spinner from "components/Spinner";
 import CheckBox from "components/CheckBox";
 import IconButton from "@material-ui/core/IconButton";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import * as S from "./style";
+import { filtersContext } from "filtersContext";
 
-const UserList = ({ users, isLoading }) => {
+const UserList = ({ users, isLoading, fetchUsers }) => {
   const [hoveredUserId, setHoveredUserId] = useState();
+  const { filters, setFilters } = useContext(filtersContext);
 
   const handleMouseEnter = (index) => {
     setHoveredUserId(index);
@@ -17,13 +19,22 @@ const UserList = ({ users, isLoading }) => {
     setHoveredUserId();
   };
 
+  const handleCheckboxChange = (eventValue) => {
+    setFilters((prevFilters) => {
+      prevFilters[eventValue] = !prevFilters[eventValue];
+      return prevFilters;
+    });
+    fetchUsers();
+  };
+
   return (
     <S.UserList>
       <S.Filters>
-        <CheckBox value="BR" label="Brazil" />
-        <CheckBox value="AU" label="Australia" />
-        <CheckBox value="CA" label="Canada" />
-        <CheckBox value="DE" label="Germany" />
+        <CheckBox value="BR" label="Brazil" onChange={handleCheckboxChange} />
+        <CheckBox value="AU" label="Australia" onChange={handleCheckboxChange} />
+        <CheckBox value="CA" label="Canada" onChange={handleCheckboxChange} />
+        <CheckBox value="DE" label="Germany" onChange={handleCheckboxChange} />
+        <CheckBox value="CH" label="Switzerland" onChange={handleCheckboxChange} />
       </S.Filters>
       <S.List>
         {users.map((user, index) => {
