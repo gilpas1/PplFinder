@@ -1,11 +1,11 @@
-import React, { useContext } from "react";
+import React from "react";
 import Text from "components/Text";
 import UserList from "components/UserList";
 import { usePeopleFetch } from "hooks";
 import * as S from "./style";
 
 const Home = () => {
-  const { users, isLoading, fetchUsers } = usePeopleFetch();
+  const { users, isLoading, fetchUsers, setFilters } = usePeopleFetch();
 
   return (
     <S.Home>
@@ -15,7 +15,12 @@ const Home = () => {
             PplFinder
           </Text>
         </S.Header>
-        <UserList users={users} isLoading={isLoading} fetchUsers={fetchUsers} />
+        <UserList
+          users={users}
+          isLoading={isLoading}
+          fetchUsers={fetchUsers}
+          setFilters={setFilters}
+        />
       </S.Content>
     </S.Home>
   );

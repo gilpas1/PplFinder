@@ -1,11 +1,10 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
-import { filtersContext } from "filtersContext";
 
 export const usePeopleFetch = () => {
   const [users, setUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const { filters, setFilters } = useContext(filtersContext);
+  const [filters, setFilters] = useState({});
 
   let url = "https://randomuser.me/api/?results=25&page=1";
 
@@ -35,8 +34,7 @@ export const usePeopleFetch = () => {
     }
 
     url = url.slice(0, -1); //removing last char (,)]
-    console.log(url);
   };
 
-  return { users, isLoading, fetchUsers };
+  return { users, isLoading, fetchUsers, setFilters };
 };

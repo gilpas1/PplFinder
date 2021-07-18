@@ -1,21 +1,18 @@
 import React, { useState } from "react";
 import { HashRouter as Router, Switch, Route } from "react-router-dom";
-import { Home } from "pages";
+import { Home, Favorites } from "pages";
 import { ThemeProvider } from "theme";
 import NavBar from "components/NavBar";
-import { filtersContext } from "filtersContext";
+import { filtersContext } from "hooks";
 
 const AppRouter = () => {
-  const [filters, setFilters] = useState({});
-
   return (
     <ThemeProvider>
       <Router>
         <NavBar />
         <Switch>
-          <filtersContext.Provider value={{ filters, setFilters }}>
-            <Route exact path="/" component={Home} />
-          </filtersContext.Provider>
+          <Route exact path="/" component={Home} />
+          <Route exact path="/favorites" component={Favorites} />
         </Switch>
       </Router>
     </ThemeProvider>

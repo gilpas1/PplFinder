@@ -1,15 +1,20 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Text from "components/Text";
 import Spinner from "components/Spinner";
 import CheckBox from "components/CheckBox";
 import IconButton from "@material-ui/core/IconButton";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import * as S from "./style";
-import { filtersContext } from "filtersContext";
 
-const UserList = ({ users, isLoading, fetchUsers }) => {
+const UserList = ({ users, isLoading, fetchUsers, setFilters }) => {
   const [hoveredUserId, setHoveredUserId] = useState();
-  const { filters, setFilters } = useContext(filtersContext);
+  const [favorites, setFavorites] = useState([]);
+
+  useEffect(() => {
+    if (localStorage.favorites) {
+      setFavorites(JSON.parse(localStorage.favorites));
+    }
+  }, []);
 
   const handleMouseEnter = (index) => {
     setHoveredUserId(index);
@@ -25,6 +30,24 @@ const UserList = ({ users, isLoading, fetchUsers }) => {
       return prevFilters;
     });
     fetchUsers();
+  };
+
+  const handleFavoriteClicked = (user) => {
+    setFavorites((prevFavorites) => {
+      let newFavorites = prevFavorites;
+      if (prevFavorites.includes(user)) {
+        newFavorites.splice(prevFavorites.indexOf(user), 1);
+      } else {
+        newFavorites = [...prevFavorites, user];
+      }
+      localStorage.favorites = JSON.stringify(newFavorites);
+      return newFavorites;
+    });
+  };
+
+  const isFavorite = (user) => {
+    if (favorites) return favorites.includes(user);
+    return false;
   };
 
   return (
@@ -57,7 +80,10 @@ const UserList = ({ users, isLoading, fetchUsers }) => {
                   {user?.location.city} {user?.location.country}
                 </Text>
               </S.UserInfo>
-              <S.IconButtonWrapper isVisible={index === hoveredUserId}>
+              <S.IconButtonWrapper
+                isVisible={index === hoveredUserId || isFavorite(user)}
+                onClick={() => handleFavoriteClicked(user)}
+              >
                 <IconButton>
                   <FavoriteIcon color="error" />
                 </IconButton>
